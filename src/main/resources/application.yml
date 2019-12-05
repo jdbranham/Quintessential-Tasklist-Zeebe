@@ -4,23 +4,26 @@ micronaut:
   http:
     client:
       read-timeout: 5s
+
 datasources:
   default:
-    url: jdbc:h2:mem:devDb
+    url: jdbc:h2:./build/DB/dbdevDb1 # jdbc:h2:~/devDb1;MODE=PostgreSQL;AUTO_SERVER=TRUE
     driverClassName: org.h2.Driver
     username: sa
-    password: ''
-    dialect: H2
+    password: sa
+    dialect: H2 # POSTGRES
 
 jpa:
   default:
     packages-to-scan:
-      - 'com.github.stephenott.qtz.forms.persistence'
+      - 'com.github.stephenott.qtz.forms'
+      - 'com.github.stephenott.qtz.tasks'
     properties:
       hibernate:
         hbm2ddl:
           auto: create-drop
         show_sql: true
+
 flyway:
   datasources:
     default:
@@ -29,3 +32,8 @@ flyway:
 
 formValidatorService:
   host: http://localhost:8081
+
+zeebe:
+  management:
+    client:
+      broker: "localhost:26500"
