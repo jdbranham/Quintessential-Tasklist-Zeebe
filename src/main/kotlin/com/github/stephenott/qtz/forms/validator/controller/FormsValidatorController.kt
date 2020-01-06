@@ -1,6 +1,9 @@
-package com.github.stephenott.qtz.forms.validator
+package com.github.stephenott.qtz.forms.validator.controller
 
-import com.github.stephenott.qtz.forms.FormSchema
+import com.github.stephenott.qtz.forms.validator.domain.FormSubmission
+import com.github.stephenott.qtz.forms.validator.exception.FormValidationException
+import com.github.stephenott.qtz.forms.validator.client.FormValidatorServiceClient
+import com.github.stephenott.qtz.forms.validator.client.ValidationResponseInvalid
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.annotation.Body
@@ -13,15 +16,12 @@ import io.reactivex.Single
 
 
 @Controller("/forms")
-class FormSubmissionController(private val formValidatorServiceClient: FormValidatorServiceClient) : FormSubmissionOperations {
-
-    @Post(value = "/submit")
-    override fun submit(submission: Single<FormSubmission>): Single<HttpResponse<FormSubmission>> {
-        return submission.map { HttpResponse.ok(it) }
-    }
+class FormsController(
+        private val formValidatorServiceClient: FormValidatorServiceClient
+) : FormsOperations {
 
     @Post(value = "/validate")
-    override fun validate(submission: Single<FormSubmission>): Single<HttpResponse<ValidationResponseValid>> {
+    override fun validate(@Body submission: Single<FormSubmission>): Single<HttpResponse<Map<String, Any?>>> {
         return formValidatorServiceClient.validate(submission)
                 .onErrorResumeNext {
                     // @TODO Can eventually be replaced once micronaut-core fixes a issue where the response body is not passed to @Error handler when it catches the HttpClientResponseException
@@ -36,7 +36,7 @@ class FormSubmissionController(private val formValidatorServiceClient: FormValid
                         Single.error(IllegalStateException("Unexpected Error received from Form Validation request.", it))
                     }
                 }.map {
-                    HttpResponse.ok(it.body()!!)
+                    HttpResponse.ok(it.body()!!.processed_submission)
                 }
     }
 
@@ -47,20 +47,6 @@ class FormSubmissionController(private val formValidatorServiceClient: FormValid
 }
 
 @Validated
-interface FormSubmissionOperations {
-    fun submit(@Body submission: Single<FormSubmission>): Single<HttpResponse<FormSubmission>>
-
-    fun validate(@Body submission: Single<FormSubmission>): Single<HttpResponse<ValidationResponseValid>>
+interface FormsOperations {
+    fun validate(submission: Single<FormSubmission>): Single<HttpResponse<Map<String, Any?>>>
 }
-
-//@Introspected
-data class FormSubmission(
-        val schema: FormSchema,
-        val submission: FormSubmissionData) {}
-
-//@Introspected
-data class FormSubmissionData(
-        val data: Map<String, Any>,
-        val metadata: Map<String, Any>?) {}
-
-class FormValidationException(val responseBody: ValidationResponseInvalid) : RuntimeException("Form Validation Exception") {}
