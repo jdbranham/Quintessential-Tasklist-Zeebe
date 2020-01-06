@@ -61,6 +61,6 @@ services:
       - ./operate/application.yml:/usr/local/operate/config/application.yml
     depends_on:
       - zeebe
-  
+
 networks:
   qtz:

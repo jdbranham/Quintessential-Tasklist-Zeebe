@@ -21,7 +21,7 @@ jpa:
     properties:
       hibernate:
         hbm2ddl:
-          auto: create-drop
+          auto: update
         show_sql: true
 
 flyway:
@@ -29,11 +29,53 @@ flyway:
     default:
       locations: classpath:databasemigrations
 
-
 formValidatorService:
   host: http://localhost:8081
 
-zeebe:
+orchestrator:
   management:
     client:
-      broker: "localhost:26500"
+      brokerContactPoint: localhost:26500
+      longPollTimeout: 30s
+  workflow-linter:
+    rules:
+      global-rules:
+        enable: false
+        description: Global Restrictions for Service Task Types
+        elementTypes:
+          - ServiceTask
+        serviceTaskRule:
+          allowedTypes:
+            - some-type
+            - user-task
+
+      user-task-rule:
+        description: Specific rule for User Task Configuration of Service Tasks
+        elementTypes:
+          - ServiceTask
+        target:
+          serviceTasks:
+            types:
+              - user-task
+        headerRule:
+          requiredKeys:
+            - title
+            - candidateGroups
+            - formKey
+          allowedNonDefinedKeys: false
+          allowedDuplicateKeys: false
+          optionalKeys:
+            - priority
+            - assignee
+            - candidateUsers
+            - dueDate
+            - description
+
+userTask:
+  enabled: false
+  maxBatchSize: 10
+
+executors:
+  python:
+    enabled: false
+    scriptFolder: "./python-scripts"
