@@ -1,7 +1,7 @@
 # builder image
 FROM adoptopenjdk/openjdk11-openj9:jdk-11.0.1.13-alpine-slim as builder
 
-COPY .. /app/src
+COPY . /app/src
 WORKDIR /app/src
 
 RUN ./gradlew build -x test --info --stacktrace
