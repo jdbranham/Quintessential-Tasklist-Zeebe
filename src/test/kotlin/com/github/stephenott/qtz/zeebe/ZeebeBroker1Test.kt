@@ -21,7 +21,7 @@ class ZeebeBroker1Test() : ZeebeSpecification() {
 
     init {
         "the zeebe client should be available" {
-            val zeebeClient = IntegrationTestHarness.getZeebeClient()
+            val zeebeClient = getZeebeClient()
             println("CLIENT is RUNNING -->>${zeebeClient.configuration}")
             zeebeClient shouldNotBe null
         }
