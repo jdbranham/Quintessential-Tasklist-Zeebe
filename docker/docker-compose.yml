@@ -7,6 +7,8 @@ services:
     build:
       context: ../
       dockerfile: ./docker/build.Dockerfile
+    environment:
+      - USER_TASK_ENABLED=true
     ports:
       - '8080:8080'
     networks:

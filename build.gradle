@@ -43,6 +43,9 @@ dependencies {
     testImplementation "io.mockk:mockk:1.9.3"
     testImplementation "io.kotlintest:kotlintest-runner-junit5:3.3.2"
 
+    kapt "io.micronaut.configuration:micronaut-openapi"
+    compile "io.swagger.core.v3:swagger-annotations"
+
     kapt 'io.micronaut.data:micronaut-data-processor:1.0.0.M5'
     implementation 'io.micronaut.data:micronaut-data-hibernate-jpa:1.0.0.M5'
     runtime 'com.h2database:h2:1.4.200'
@@ -74,7 +77,7 @@ compileKotlin {
 	kotlinOptions {
 	    jvmTarget = '1.8' 
 	    //Will retain parameter names for Java reflection
-	    javaParameters = true 
+	    javaParameters = true
 	}
 }
 

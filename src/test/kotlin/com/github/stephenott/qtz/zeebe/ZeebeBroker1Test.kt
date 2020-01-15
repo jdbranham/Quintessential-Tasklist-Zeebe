@@ -27,7 +27,7 @@ class ZeebeBroker1Test() : ZeebeSpecification() {
         }
 
         "deploy a workflow" {
-            val file = File("src/test/resources/test1.bpmn")
+            val file = File("src/test/resources/simpleUserTask.bpmn")
 
             val requestBody = MultipartBody.builder()
                     .addPart("workflow",
