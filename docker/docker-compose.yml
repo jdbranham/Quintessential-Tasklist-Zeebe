@@ -8,7 +8,7 @@ services:
       context: ../
       dockerfile: ./docker/build.Dockerfile
     environment:
-      - USER_TASK_ENABLED=true
+      - USER_TASK_ENABLED=false
       - ORCHESTRATOR_MANAGEMENT_CLIENT_BROKER_CONTACT_POINT=zeebe:26500
     ports:
       - '8080:8080'
