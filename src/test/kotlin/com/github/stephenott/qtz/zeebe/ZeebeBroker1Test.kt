@@ -1,48 +1,44 @@
 package com.github.stephenott.qtz.zeebe
 
-import io.kotlintest.Spec
-import io.kotlintest.specs.StringSpec
+import io.kotlintest.shouldNotBe
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.MediaType
+import io.micronaut.http.client.RxHttpClient
+import io.micronaut.http.client.annotation.Client
 import io.micronaut.http.client.multipart.MultipartBody
 import io.micronaut.test.annotation.MicronautTest
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import java.io.File
+import javax.inject.Inject
 
 @MicronautTest
-class ZeebeBroker1Test : StringSpec({
+class ZeebeBroker1Test() : ZeebeSpecification() {
 
-//    "zeebe client should be running" {
-//        val client: ZeebeClient = ZeebeClient.newClientBuilder()
-//                .brokerContactPoint(broker.getExternalAddress(ZeebePort.GATEWAY))
-//                .build()
-//        println("CLIENT is RUNNING -->>$client")
-//
-//        client shouldNotBe null
-//    }
+    @Inject @field:Client("/") lateinit var client: RxHttpClient
 
-    "deploy a workflow"{
+    private val log: Logger = LoggerFactory.getLogger(ZeebeBroker1Test::class.java)
 
-        val file = File("test1.bpmn")
+    init {
+        "the zeebe client should be available" {
+            val zeebeClient = IntegrationTestHarness.getZeebeClient()
+            println("CLIENT is RUNNING -->>${zeebeClient.configuration}")
+            zeebeClient shouldNotBe null
+        }
 
-        val requestBody = MultipartBody.builder()
-                .addPart("data",
-                        file.name,
-                        MediaType.TEXT_PLAIN_TYPE,
-                        file).build()
+        "deploy a workflow" {
+            val file = File("src/test/resources/test1.bpmn")
 
-        val dog = HttpRequest.POST("localhost:8080/zeebe/management/deployment", requestBody)
-                .contentType(MediaType.MULTIPART_FORM_DATA_TYPE)
+            val requestBody = MultipartBody.builder()
+                    .addPart("workflow",
+                            file.name,
+                            MediaType.TEXT_PLAIN_TYPE,
+                            file).build()
 
-
-    }
-
-}) {
-    companion object {
-//        var broker = ZeebeBrokerContainer() //@Todo is a .start needed?
-    }
-
-    override fun afterSpec(spec: Spec) {
-//        broker.stop()
-        //@TODO move to common spec abstract class
+            val dog = HttpRequest.POST("/zeebe/management/workflow/deployment", requestBody)
+                    .contentType(MediaType.MULTIPART_FORM_DATA_TYPE)
+            val response = client.toBlocking().exchange(dog, Map::class.java)
+            log.info("$response")
+        }
     }
 }
