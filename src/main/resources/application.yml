@@ -1,4 +1,5 @@
 micronaut:
+  environments: default
   application:
     name: quintessential-tasklist-zeebe
   http:

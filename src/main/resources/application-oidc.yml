@@ -1,0 +1,24 @@
+micronaut:
+  security:
+    enabled: true
+    oauth2:
+      enabled: true
+      clients:
+        oidc:
+          client-secret: '${OIDC_CLIENT_SECRET}'
+          client-id: '${OIDC_CLIENT_ID}'
+          openid:
+            issuer: '${OIDC_ISSUER_URI}'
+    token:
+      jwt:
+        enabled: true
+        cookie:
+          enabled: true
+        signatures:
+          secret:
+            generator:
+              secret: pleaseChangeThisSecretForANewOne
+    endpoints:
+      logout:
+        enabled: true
+        get-allowed: true
