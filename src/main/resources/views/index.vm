@@ -4,6 +4,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <title>QTZ</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <style>
         ::-moz-selection {
             background: #b3d4fc;
@@ -15,6 +16,10 @@
             text-shadow: none;
         }
 
+        h1 {
+            text-align: center;
+        }
+
         html {
             padding: 30px 10px;
             font-size: 20px;
@@ -23,11 +28,6 @@
             background: #262c31;
             -webkit-text-size-adjust: 100%;
             -ms-text-size-adjust: 100%;
-        }
-
-        html,
-        input {
-            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
         }
 
         body {
@@ -41,33 +41,6 @@
             background: #fcfcfc;
         }
 
-        h1 {
-            margin: 0 10px;
-            font-size: 50px;
-            text-align: center;
-        }
-
-        h1 span {
-            color: #bbb;
-        }
-
-        h3 {
-            margin: 1.5em 0 0.5em;
-        }
-
-        p {
-            margin: 1em 0;
-        }
-
-        ul {
-            padding: 0 0 0 40px;
-            margin: 1em 0;
-        }
-
-		a {
-			text-decoration: none;
-		}
-
         .container {
             max-width: 800px;
             _width: 380px;
@@ -77,14 +50,14 @@
 </head>
 <body>
 <div class="container">
-    <h1>Welcome,
+    <h2>Welcome,
         #if( $loggedIn )
         <span>$username</span>
         #else
         <span>QTZ Developer</span>
         #end
         !
-    </h1>
+    </h2>
     <ul>
     </ul>
     <ul>
@@ -96,17 +69,36 @@
 
     #if( $loggedIn )
     <form action="logout" method="POST">
-        <input type="submit" value="Logout"/>
+        <input type="submit" role="button" class="btn btn-primary" value="Logout"/>
     </form>
     #else
-    <p><a href="/login/auth">Login with native</a></p>
-    #if( $oauthEnabled )
-    <ul>
-        <li><a href="/oauth/login/oidc">Login with OAuth</a></li>
-    </ul>
-    #end
+    <div class="container">
+        <form action="/login" method="POST">
+            <div class="form-group">
+                <label for="inputUsername">Username</label>
+                <input type="text" class="form-control" id="inputUsername" name="username" placeholder="Enter username">
+            </div>
+            <div class="form-group">
+                <label for="inputPassword">Password</label>
+                <input type="password" class="form-control" id="inputPassword" name="password" placeholder="Password">
+            </div>
+            <button type="submit" role="button" class="btn btn-primary">Login</button>
+                #if( $oauthEnabled )
+                <a class="btn btn-secondary" role="button" href="/oauth/login/oidc">Login with OAuth</a>
+                #end
+            #if( $errors )
+            <div id="errors">
+                <span style="color: red;">Login Failed</span>
+            </div>
+            #end
+        </form>
+    </div>
     #end
 
 </div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 </body>
 </html>
