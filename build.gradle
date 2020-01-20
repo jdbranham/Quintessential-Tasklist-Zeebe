@@ -33,8 +33,8 @@ dependencies {
     implementation 'io.micronaut:micronaut-validation'
     implementation("io.reactivex.rxjava2:rxkotlin:2.4.0")
 
-    implementation "io.micronaut:micronaut-views-thymeleaf"
-    runtime "org.thymeleaf:thymeleaf:3.0.11.RELEASE"
+    implementation "io.micronaut:micronaut-views"
+    implementation "org.apache.velocity:velocity-engine-core:2.0"
 
     compile 'io.micronaut.configuration:micronaut-security-oauth2'
     implementation "io.micronaut:micronaut-security-jwt"

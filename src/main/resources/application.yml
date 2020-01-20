@@ -2,6 +2,73 @@ micronaut:
   environments: default
   application:
     name: quintessential-tasklist-zeebe
+  security:
+    enabled: true
+    oauth2:
+      enabled: false
+    token:
+      roles-name: roles
+      jwt:
+        enabled: true
+        bearer:
+          enabled: false
+        cookie:
+          enabled: true
+          loginFailureTargetUrl: /login/authFailed
+        signatures:
+          secret:
+            generator:
+              secret: '${JWT_SECRET:YouReallyShouldChangeThisValueYouReallyShouldChangeThisValue}'
+    endpoints:
+      login:
+        enabled: true
+      logout:
+        enabled: true
+        get-allowed: true
+    intercept-url-map:
+      - pattern: /swagger**
+        access:
+          - isAnonymous()
+          - isAuthenticated()
+      - pattern: /swagger/**
+        access:
+          - isAnonymous()
+          - isAuthenticated()
+      - pattern: /docs
+        access:
+          - isAnonymous()
+          - isAuthenticated()
+      - pattern: /forms**
+        httpMethod: GET
+        access: "FORM_GET"
+      - pattern: /tasks
+        httpMethod: GET
+        access: "TASK_GET"
+      - pattern: /tasks
+        httpMethod: POST
+        access: "TASK_CREATE"
+      - pattern: /tasks/*
+        access: "TASK_GET"
+      - pattern: /tasks/*/claim
+        access: "TASK_CLAIM"
+      - pattern: /tasks/*/unclaim
+        access: "TASK_UNCLAIM"
+      - pattern: /tasks/*/assign
+        access: "TASK_ASSIGN"
+      - pattern: /tasks/*/form
+        access: "TASK_GET"
+      - pattern: /tasks/*/complete
+        access: "TASK_COMPLETE"
+      - pattern: /tasks/*/submit
+        access: "TASK_SUBMIT"
+      - pattern: /users
+        http-method: POST
+        access: "TASK_CREATE"
+      - pattern: /users/role
+        http-method: POST
+        access: "USER_ROLE_CREATE"
+      - pattern: /**
+        access: "ROLE_ADMIN"
   http:
     client:
       read-timeout: 5s
@@ -12,7 +79,7 @@ micronaut:
         mapping: /swagger/**
       redoc:
         paths: classpath:swagger/views/redoc
-        mapping: /redoc/**
+        mapping: /docs/**
       swagger-ui:
         paths: classpath:swagger/views/swagger-ui
         mapping: /swagger-ui/**
@@ -30,6 +97,7 @@ jpa:
     packages-to-scan:
       - 'com.github.stephenott.qtz.forms'
       - 'com.github.stephenott.qtz.tasks'
+      - 'com.github.stephenott.qtz.user'
     properties:
       hibernate:
         hbm2ddl:
@@ -91,3 +159,24 @@ executors:
   python:
     enabled: false
     scriptFolder: "./python-scripts"
+
+security:
+  role-permissions:
+    - role: "ROLE_ADMIN"
+      permissions:
+        - FORM_GET
+        - TASK_GET
+        - TASK_CLAIM
+        - TASK_COMPLETE
+        - TASK_CREATE
+        - TASK_UNCLAIM
+        - USER_CREATE
+        - USER_ROLE_CREATE
+    - role: "ROLE_USER"
+      permissions:
+        - FORM_GET
+        - TASK_GET
+        - TASK_CLAIM
+        - TASK_COMPLETE
+        - TASK_CREATE
+        - TASK_UNCLAIM

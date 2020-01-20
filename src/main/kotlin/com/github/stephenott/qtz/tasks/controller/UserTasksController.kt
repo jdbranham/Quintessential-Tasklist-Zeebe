@@ -1,9 +1,9 @@
 package com.github.stephenott.qtz.tasks.controller
 
 import com.github.stephenott.qtz.forms.domain.FormSchema
+import com.github.stephenott.qtz.forms.validator.client.ValidationResponseInvalid
 import com.github.stephenott.qtz.forms.validator.domain.FormSubmissionData
 import com.github.stephenott.qtz.forms.validator.exception.FormValidationException
-import com.github.stephenott.qtz.forms.validator.client.ValidationResponseInvalid
 import com.github.stephenott.qtz.tasks.domain.UserTaskEntity
 import com.github.stephenott.qtz.tasks.domain.ZeebeVariables
 import com.github.stephenott.qtz.tasks.repository.UserTasksRepository
@@ -46,10 +46,12 @@ open class UserTasksController() : UserTasksControllerOperations {
                 }
     }
 
+    @Get("/{taskId}/claim")
     override fun claimTask(taskId: UUID): Single<HttpResponse<UserTaskEntity>> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
+    @Get("/{taskId}/unclaim")
     override fun unClaimTask(taskId: UUID): Single<HttpResponse<UserTaskEntity>> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }

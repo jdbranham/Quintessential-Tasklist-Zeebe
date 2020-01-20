@@ -1,24 +1,16 @@
 micronaut:
   security:
     enabled: true
-    oauth2:
-      enabled: true
-      clients:
-        oidc:
-          client-secret: '${OIDC_CLIENT_SECRET}'
-          client-id: '${OIDC_CLIENT_ID}'
-          openid:
-            issuer: '${OIDC_ISSUER_URI}'
     token:
       jwt:
-        enabled: true
-        cookie:
+        bearer:
           enabled: true
-        signatures:
-          secret:
-            generator:
-              secret: pleaseChangeThisSecretForANewOne
-    endpoints:
-      logout:
-        enabled: true
-        get-allowed: true
+    oauth2:
+      enabled: '${OIDC_ENABLED:true}'
+      clients:
+        oidc:
+          client-secret: '${OIDC_CLIENT_SECRET:changeme}'
+          client-id: '${OIDC_CLIENT_ID:changeme}'
+          openid:
+            issuer: '${OIDC_ISSUER_URI:changeme}'
+          scopes: '${OIDC_SCOPES:`openid profile`}'
