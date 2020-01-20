@@ -165,6 +165,7 @@ security:
     - role: "ROLE_ADMIN"
       permissions:
         - FORM_GET
+        - TASK_ASSIGN
         - TASK_GET
         - TASK_CLAIM
         - TASK_COMPLETE
