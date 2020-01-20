@@ -8,7 +8,6 @@ import io.micronaut.context.annotation.Context
 class SecurityConfiguration {
     var anonymousRole = "ROLE_ANONYMOUS"
     var adminRole = "ROLE_ADMIN"
-    var userRole = "ROLE_USER"
 
     var defaultAdminUsername: String = "admin"
     var defaultAdminPassword: String = "admin"
